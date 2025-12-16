@@ -39,12 +39,13 @@
         time: 2000
     });
 
+    var courseCount = $('.course-carousel .courses').length;
 
     // Courses carousel
     $(".courses-carousel").owlCarousel({
         autoplay: true,
         smartSpeed: 1500,
-        loop: true,
+        loop: courseCount > 4,
         dots: false,
         nav : false,
         responsive: {
