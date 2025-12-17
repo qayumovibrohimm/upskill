@@ -40,6 +40,7 @@ class Course(models.Model):
     subject = models.ForeignKey(Subject, related_name='courses', on_delete=models.CASCADE)
     title = models.CharField(max_length=200)
     slug = models.SlugField(max_length=200, unique=True)
+    price = models.DecimalField(max_digits=14, decimal_places=2, default=0)
     overview = models.TextField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     image = models.ImageField(upload_to='images', null=True, blank=True)
@@ -52,6 +53,9 @@ class Course(models.Model):
         if not self.image:
             return static('upskill/img/no-image/OIP.webp')
         return self.image.url
+
+    def __str__(self):
+        return self.title
 
 
 class Module(models.Model):

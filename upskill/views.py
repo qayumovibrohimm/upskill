@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.views import View
 from django.views.generic import ListView, TemplateView, DetailView
 
-from .models import Subject, Course
+from .models import Subject, Course, Module
 
 # Create your views here.
 
@@ -62,17 +62,18 @@ class AboutView(TemplateView):
 class CourseView(TemplateView):
     template_name = 'upskill/course.html'
 
-
-class CourseDetailsView(DetailView):
-    model = Course
-    template_name = 'upskill/detail.html'
-    context_object_name = 'course'
-    slug_field = 'slug'
-    slug_url_kwarg = 'slug'
-
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['recent_courses'] = Course.objects.exclude(pk=self.object.pk).order_by('-created_at')[:5]
-        context['related_courses'] = Course.objects.filter(subject=self.object.subject).exclude(pk=self.object.pk)[:5]
-        context['categories'] = Subject.objects.all()
+        context['courses'] = Course.objects.all()
+        return context
+
+class CourseDetail(DetailView):
+    template_name = 'upskill/detail.html'
+    queryset = Course.objects.all()
+    context_object_name = 'course'
+
+    def get_context_data(self, **kwargs):
+        course = self.get_object()
+        context = super().get_context_data(**kwargs)
+        context['modules'] = enumerate(course.modules.all(), start=1)
         return context
