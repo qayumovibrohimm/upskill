@@ -1,0 +1,8 @@
+# Maxfiy fayllar
+.env
+
+# Python / Django kesh va log fayllar
+__pycache__/
+*.pyc
+db.sqlite3
+*.log
