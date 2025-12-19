@@ -2,7 +2,13 @@ from django.shortcuts import render
 from django.views import View
 from django.views.generic import ListView, TemplateView, DetailView
 
-from .models import Subject, Course, Module
+from .models import Subject, Course, Module, Content
+
+import os
+from django.http import FileResponse, Http404
+from django.shortcuts import get_object_or_404
+from .models import File, Content
+
 
 # Create your views here.
 
@@ -77,3 +83,30 @@ class CourseDetail(DetailView):
         context = super().get_context_data(**kwargs)
         context['modules'] = enumerate(course.modules.all(), start=1)
         return context
+
+class ContentDetailView(DetailView):
+    template_name = 'upskill/content_detail.html'
+    context_object_name = 'content'
+    model = Content
+
+
+
+def download_file(request, content_id):
+    content = get_object_or_404(Content, id=content_id)
+
+    # faqat file bo'lsa
+    if content.content_type.model != 'file':
+        raise Http404("Not a file content")
+
+    file_item = content.item  # bu File model
+
+    file_path = file_item.file.path
+    file_name = os.path.basename(file_path)
+
+    response = FileResponse(
+        open(file_path, 'rb'),
+        as_attachment=True,
+        filename=file_name
+    )
+
+    return response

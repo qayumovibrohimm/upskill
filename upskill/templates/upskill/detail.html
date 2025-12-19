@@ -58,36 +58,19 @@
 
                                 <div id="module{{ index }}" class="collapse" data-parent="#courseModules">
                                     <div class="card-body p-0">
-
+                                        {% for content in module.contents.all %}
                                         <!-- Tanishuv -->
-                                        <div class="d-flex justify-content-between align-items-center px-3 py-2 border-bottom lesson-item"
-                                             data-toggle="modal"
-                                             data-target="#lessonModal"
-                                             data-title="Tanishuv"
-                                             data-content="Bu darsda kurs haqida umumiy tanishtiruv beriladi.">
-                                            <div class="d-flex align-items-center">
-                                                <i class="fa fa-play-circle text-primary mr-2"></i>
-                                                Tanishuv
-                                            </div>
-                                            <i class="fa fa-lock text-muted"></i>
-                                        </div>
+                                            <div class="d-flex justify-content-between align-items-center px-3 py-2 border-bottom lesson-item">
 
-                                        <!-- Kirish -->
-                                        <div class="d-flex justify-content-between align-items-center px-3 py-2 border-bottom lesson-item"
-                                             data-toggle="modal"
-                                             data-target="#lessonModal"
-                                             data-title="Kirish"
-                                             data-content="Bu darsda asosiy tushunchalar va kurs tuzilmasi tushuntiriladi.">
-                                            <div class="d-flex align-items-center">
-                                                <i class="fa fa-play-circle text-primary mr-2"></i>
-                                                Kirish
+                                                <div>
+                                                    <i class="fa fa-play-circle text-primary mr-2"></i>
+                                                    <a href="{% url 'content_detail' content.id %}">{{ content.item.title }}</a>
+                                                </div>
+                                                <i class="fa fa-lock text-muted"></i>
                                             </div>
-                                            <div class="d-flex align-items-center text-muted">
-                                                <span class="mr-2">00:01:00</span>
-                                                <i class="fa fa-lock"></i>
-                                            </div>
-                                        </div>
-
+                                        {% empty %}
+                                                <p class="text-muted">Hozircha mavzu yo'q</p>
+                                        {% endfor %}
                                     </div>
                                 </div>
                             </div>
@@ -208,43 +191,7 @@
         </div>
     </div>
     <!-- Detail End -->
-    <div class="modal fade" id="lessonModal" tabindex="-1" role="dialog">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
 
-                <div class="modal-header">
-                    <h5 class="modal-title" id="lessonModalTitle">bu yerda topic content boladi</h5>
-                    <button type="button" class="close" data-dismiss="modal">
-                        <span>&times;</span>
-                    </button>
-                </div>
-
-                <div class="modal-body" id="lessonModalContent">
-                    <!-- JS orqali to‘ldiriladi -->
-                </div>
-
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">
-                        Yopish
-                    </button>
-                </div>
-
-            </div>
-        </div>
-    </div>
-
-    <script>
-        $('#lessonModal').on('show.bs.modal', function (event) {
-
-            let button = $(event.relatedTarget)
-
-            let title = button.data('title')
-            let description = button.data('description')
-
-            $('#lessonModalTitle').text(title)
-            $('#lessonModalContent').text(description)
-        });
-    </script>
 
 
 

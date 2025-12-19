@@ -112,6 +112,14 @@ class File(ItemBase):
 class Video(ItemBase):
     url = models.URLField()
 
+    @property
+    def embed_url(self):
+        if "youtube.com/watch?v=" in self.url:
+            return self.url.replace("watch?v=", "embed/")
+        if "youtu.be/" in self.url:
+            return self.url.replace("youtu.be/", "youtube.com/embed/")
+        return self.url
+
 
 class Image(ItemBase):
     image = models.ImageField(upload_to='images')

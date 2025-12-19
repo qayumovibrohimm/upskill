@@ -1,0 +1,5 @@
+Salom {{ user.username }},
+
+Hisobingizni aktivlashtirish uchun quyidagi linkni bosing:
+
+http://{{ domain }}{% url 'activate' uidb64=uid token=token %}

@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <title>Home</title>
+</head>
+<body>
+
+    <h1>
+        Xush kelibsiz, {{ request.user.email }} 👋
+    </h1>
+
+    <p>
+        Siz tizimga muvaffaqiyatli kirdingiz.
+    </p>
+
+    <a href="{% url 'logout' %}">Logout</a>
+
+</body>
+</html>
