@@ -3,6 +3,8 @@ from .views import IndexView, AboutView, CourseView, CourseDetail, ContentDetail
 from django.conf import settings
 from django.conf.urls.static import static
 
+app_name = 'upskill'
+
 urlpatterns = [
     path('', IndexView.as_view(), name='index'),
     path('subject/<slug:subject_slug>', IndexView.as_view(), name='course_of_subjects'),

@@ -1,11 +1,13 @@
 from django.urls import path
-from .views import home_view, user_login, user_logout, register, activate
+from .views import register_page, verify_email_code
+from django.conf import settings
+from django.conf.urls.static import static
+
+app_name = 'user'
 
 urlpatterns = [
-    path('register/', register, name='register'),
-    path('activate/<uidb64>/<token>/', activate, name='activate'),
-    path('login/', user_login, name='login'),
-    path('logout/', user_logout, name='logout'),
-    path('', home_view, name='home'),
+    path('register/', register_page, name='register_page'),
+    path('email-confirm/<uidb64>/<token>/', verify_email_code, name='verify-email-confirm'),
+    path('verify-code/', verify_email_code, name='verify-code'),
 
 ]

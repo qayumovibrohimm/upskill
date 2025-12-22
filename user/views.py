@@ -1,96 +1,87 @@
-from django.contrib.auth.models import User
+from django.shortcuts import render, redirect
+from .forms import RegisterForm
 from django.contrib.sites.shortcuts import get_current_site
-from django.template.loader import render_to_string
-from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str
-from django.core.mail import EmailMessage
-from django.shortcuts import render, redirect
-from django.contrib.auth import login
-from django.contrib import messages
-
-
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.template.loader import render_to_string
+from .models import CustomUser
 from .tokens import account_activation_token
-
-from django.shortcuts import render, redirect
-from django.contrib.auth import authenticate, login, logout
+from django.core.mail import EmailMessage
 from django.contrib import messages
-from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse
 
+def register_page(request):
+    form = RegisterForm()
 
-def register(request):
     if request.method == 'POST':
-        email = request.POST['email']
-        password = request.POST['password']
+        form = RegisterForm(request.POST)
+        if form.is_valid():
+            user = form.save(commit=False)
+            # user.set_password(user.password)
+            user.is_active = False
+            user.save()
 
-        # User yaratish
-        user = User.objects.create_user(
-            username=email,
-            email=email,
-            password=password
-        )
-        user.is_active = False
-        user.save()
+            # creates 6 digit code:
 
-        # Activation email
-        current_site = get_current_site(request)
-        mail_subject = 'Hisobingizni aktivlashtiring'
-        message = render_to_string('user/activation_email.html', {
-            'user': user,
-            'domain': current_site.domain,
-            'uid': urlsafe_base64_encode(force_bytes(user.pk)),
-            'token': account_activation_token.make_token(user),
-        })
+            user.generate_verification_code()
 
-        email_msg = EmailMessage(mail_subject, message, to=[user.email])
-        email_msg.send()
+            subject = "Email Verification Code"
+            message = render_to_string(
+                'user/verify_email_message.html',
+                {
+                    'user': user,
+                    'code': user.email_verification_code
+                }
+            )
 
-        messages.success(request, 'Emailingizga activation link yuborildi')
-        return redirect('login')
+            email = EmailMessage(
+                subject,
+                message,
+                to=[user.email]
+            )
+            email.content_subtype = 'html'
+            email.send()
 
-    return render(request, 'user/register.html')
+            return redirect('user:verify-code')
+
+    return render(request, 'user/register.html', {'form': form})
 
 
+def verify_email_code(request):
+    if request.method == 'POST':
+        code = request.POST.get('code')
 
-def activate(request, uidb64, token):
-    try:
-        uid = force_str(urlsafe_base64_decode(uidb64))
-        user = User.objects.get(pk=uid)
-    except:
-        user = None
+        try:
+            user = CustomUser.objects.get(
+                email_verification_code=code,
+                is_active=False
+            )
+        except CustomUser.DoesNotExist:
+            messages.error(request, 'Wrong code or code has been expired')
+            return redirect('user:verify-code')
 
-    if user is not None and account_activation_token.check_token(user, token):
         user.is_active = True
+        user.email_verification_code = None
         user.save()
-        login(request, user)  # Avtomatik login
-        return redirect('home')
-    else:
-        return render(request, 'user/activation_invalid.html')
 
-def user_login(request):
-    if request.method == "POST":
-        username = request.POST.get('username')  # email ishlatayapmiz
-        password = request.POST.get('password')
+        messages.success(request, 'Successfully confirmed')
+        return HttpResponse('Successfully verified!')
 
-        user = authenticate(request, username=username, password=password)
-
-        if user is not None:
-            if user.is_active:
-                login(request, user)
-                messages.success(request, f"Xush kelibsiz, {user.username}!")
-                return redirect('home')  # home page yoki dashboard
-            else:
-                messages.error(request, "Hisobingiz aktivlashtirilmagan. Emailni tekshiring.")
-        else:
-            messages.error(request, "Username yoki parol noto‘g‘ri.")
-    return render(request, 'user/login.html')
+    return render(request, 'user/verify_code.html')
 
 
-@login_required
-def user_logout(request):
-    logout(request)
-    messages.success(request, "Siz muvaffaqiyatli logout qilindingiz.")
-    return redirect('login')
-
-@login_required
-def home_view(request):
-    return render(request, 'home.html')
+# def verify_email_confirm(request, uidb64, token):
+#     try:
+#         uid = force_str(urlsafe_base64_decode(uidb64))
+#         user = CustomUser.objects.get(pk=uid)
+#     except(TypeError, ValueError, OverflowError, CustomUser.DoesNotExist):
+#         user = None
+#
+#     if user is not None and account_activation_token.check_token(user, token):
+#         user.is_active = True
+#         user.save()
+#         messages.success(request, 'Your email has been verified.')
+#         return HttpResponse('Successfully verified!')
+#     else:
+#         messages.warning(request, 'The link is invalid.')
+#         return HttpResponse('OOPS! Something is wrong')

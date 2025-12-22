@@ -24,7 +24,7 @@
             <div class="row">
                 {% for course in courses %}
                     <div class="col-lg-4 col-md-6 pb-4">
-                    <a class="courses-list-item position-relative d-block overflow-hidden mb-2" href="{% url 'detail' course.slug %}">
+                    <a class="courses-list-item position-relative d-block overflow-hidden mb-2" href="{% url 'upskill:detail' course.slug %}">
                         <img class="img-fluid" src="{{course.get_image_url}}" alt="">
                         <div class="courses-text">
                             <h4 class="text-center text-white px-3">{{course.title}}</h4>

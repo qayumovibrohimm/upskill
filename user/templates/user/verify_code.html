@@ -1,0 +1,19 @@
+<h2>Email confirmation</h2>
+
+{% if messages %}
+  {% for message in messages %}
+    <p style="color:red">{{ message }}</p>
+  {% endfor %}
+{% endif %}
+
+<form method="post">
+    {% csrf_token %}
+    <input
+        type="text"
+        name="code"
+        placeholder="6 digit code"
+        maxlength="6"
+        required
+    >
+    <button type="submit">Confirm</button>
+</form>
