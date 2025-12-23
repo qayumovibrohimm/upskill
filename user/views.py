@@ -9,6 +9,9 @@ from .tokens import account_activation_token
 from django.core.mail import EmailMessage
 from django.contrib import messages
 from django.http import HttpResponse
+from django.contrib.auth import login
+from django.contrib.auth.views import LoginView, LogoutView
+
 
 def register_page(request):
     form = RegisterForm()
@@ -64,8 +67,8 @@ def verify_email_code(request):
         user.email_verification_code = None
         user.save()
 
-        messages.success(request, 'Successfully confirmed')
-        return HttpResponse('Successfully verified!')
+        login(request,user)
+        return redirect('upskill:index')
 
     return render(request, 'user/verify_code.html')
 
@@ -85,3 +88,5 @@ def verify_email_code(request):
 #     else:
 #         messages.warning(request, 'The link is invalid.')
 #         return HttpResponse('OOPS! Something is wrong')
+
+

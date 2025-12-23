@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 import os
 
-from django.conf.global_settings import MEDIA_URL
+from django.conf.global_settings import MEDIA_URL, LOGOUT_REDIRECT_URL, LOGIN_REDIRECT_URL
 from dotenv import load_dotenv
 
 from pathlib import Path
@@ -45,6 +45,8 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "upskill",
     'user',
+    'social_django',
+
 ]
 
 MIDDLEWARE = [
@@ -151,3 +153,14 @@ EMAIL_HOST_PASSWORD = os.getenv('EMAIL_PASSWORD')
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 AUTH_USER_MODEL = 'user.CustomUser'
+
+LOGOUT_REDIRECT_URL = 'upskill:index'
+LOGIN_REDIRECT_URL = 'upskill:index'
+
+AUTHENTICATION_BACKENDS = (
+    'social_core.backends.google.GoogleOAuth2',
+    'django.contrib.auth.backends.ModelBackend',  # Keep for username/password login
+)
+
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = os.getenv('SOCIAL_OAUTH2_KEY')
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = os.getenv('SOCIAL_OAUTH2_SECRET')

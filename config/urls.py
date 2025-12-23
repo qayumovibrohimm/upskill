@@ -24,5 +24,6 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path('upskill/', include('upskill.urls', namespace='upskill')),
     path('user/', include('user.urls', namespace='user')),
+    path('social-auth/', include('social_django.urls', namespace='social')),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
