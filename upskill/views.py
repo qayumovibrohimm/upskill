@@ -141,3 +141,5 @@ def contact_view(request):
     else:
         form = ContactForm()
     return render(request, 'upskill/contact.html', {'form': form})
+
+

@@ -1,0 +1,22 @@
+[program:gunicorn]
+directory=/home/ubuntu/upskill
+command=/home/ubuntu/env/bin/gunicorn --workers 3 --bind unix:/home/ubuntu/upskill/app.sock upskill.wsgi:application
+autostart=true
+autorestart=true
+stderr_logfile=/var/log/gunicorn/gunicorn.err.log
+stdout_logfile=/var/log/gunicorn/gunicorn.out.log
+
+[group:guni]
+programs:gunicorn
+
+
+
+[program:gunicorn]
+directory=/home/ubuntu
+command=/home/ubuntu/venv/bin/gunicorn --workers 3 --bind unix:/home/ubuntu/upskill/app.sock upskill.wsgi:application
+autostart=true
+autorestart=true
+stderr_logfile=/var/log/gunicorn/gunicorn.err.log
+stdout_logfile=/var/log/gunicorn/gunicorn.out.log
+user=ubuntu
+environment=LANG="en_US.UTF-8",LC_ALL="en_US.UTF-8",PYTHONPATH="/home/ubuntu"
