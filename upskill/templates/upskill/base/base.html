@@ -92,7 +92,7 @@
                             <a href="testimonial.html" class="dropdown-item">Testimonial</a>
                         </div>
                     </div>
-                    <a href="contact.html" class="nav-item nav-link">Contact</a>
+                    <a href="{% url 'upskill:contact' %}" class="nav-item nav-link">Contact</a>
                 </div>
                 {% if user.is_authenticated %}
                 <form method="post" action="{% url 'user:logout' %}">
@@ -156,6 +156,12 @@
   {% endblock %}
 
   {% block course_detail %}
+  {% endblock %}
+
+  {% block content_detail %}
+  {% endblock %}
+
+  {% block contact_detail %}
   {% endblock %}
 
     <!-- Footer Start -->

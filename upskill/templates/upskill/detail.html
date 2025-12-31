@@ -64,7 +64,7 @@
 
                                                 <div>
                                                     <i class="fa fa-play-circle text-primary mr-2"></i>
-                                                    <a href="{% url 'content_detail' content.id %}">{{ content.item.title }}</a>
+                                                    <a href="{% url 'upskill:content_detail' pk=content.id %}">{{ content.item.title }}</a>
                                                 </div>
                                                 <i class="fa fa-lock text-muted"></i>
                                             </div>

@@ -67,8 +67,11 @@ def verify_email_code(request):
         user.email_verification_code = None
         user.save()
 
-        login(request,user)
+        login(request, user, backend='django.contrib.auth.backends.ModelBackend')
+
         return redirect('upskill:index')
+
+
 
     return render(request, 'user/verify_code.html')
 

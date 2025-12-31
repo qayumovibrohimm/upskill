@@ -1,3 +1,7 @@
+{% extends "upskill/base/base.html" %}
+{% load static %}
+
+{% block content_detail %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -125,9 +129,7 @@
                 loading="lazy">
             </iframe><br>
 
-            <span style="font-size: 22px; margin-top:20px; display:inline-block; font-weight:300">Python is a dynamically typed language
-
-This dynamic nature of Python is both its strength and weakness</span>
+            <span style="font-size: 22px; margin-top:20px; display:inline-block; font-weight:300"></span>
         </div>
     {% else %}
         <a href="{{ content.item.url }}" target="_blank" class="lesson-fallback">
@@ -151,7 +153,17 @@ This dynamic nature of Python is both its strength and weakness</span>
         </a>
     {% endif %}
 
+    {% if content.content_type.model == 'image' %}
+        <div class="lesson-image" style="margin-top:20px;">
+            <img src="{{ content.item.get_image_url }}"
+                 alt="{{ content.item.title }}"
+                 style="max-width:100%; height:auto;"/>
+            <p>{{ content.item.title }}</p>
+        </div>
+    {% endif %}
+
 </div>
 
 </body>
 </html>
+  {% endblock %}
